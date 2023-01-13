@@ -23,7 +23,7 @@ let s:headersRegexp = '\v^(#|.+\n(\=+|-+)$)'
 " If there is no current header, return `0`.
 "
 " @param a:1 The line to look the header of. Default value: `getpos('.')`.
-function! s:GetHeaderLineNum(...)
+function! s:GetHeaderLineNum(...) abort
   if a:0 == 0
     let l:l = line('.')
   else
@@ -42,7 +42,7 @@ endfunction
 " - if line is inside a header, return the header level (h1 -> 1, h2 -> 2, etc.).
 "
 " - if line is at top level outside any headers, return `0`.
-function! s:GetHeaderLevel(...)
+function! s:GetHeaderLevel(...) abort
   if a:0 == 0
     let l:line = line('.')
   else
@@ -58,7 +58,7 @@ endfunction
 
 ""
 " Return list of headers and their levels.
-function! s:GetHeaderList()
+function! s:GetHeaderList() abort
   let l:bufnr = bufnr('%')
   let l:fenced_block = 0
   let l:front_matter = 0
@@ -114,7 +114,7 @@ endfunction
 " If there is no header at the given line, returns `0`.
 "
 " @param linenum - the line number to get level from
-function! s:GetLevelOfHeaderAtLine(linenum)
+function! s:GetLevelOfHeaderAtLine(linenum) abort
   let l:lines = join(getline(a:linenum, a:linenum + 1), "\n")
   for l:key in keys(s:levelRegexpDict)
     if l:lines =~ get(s:levelRegexpDict, l:key)
@@ -126,7 +126,7 @@ endfunction
 
 ""
 " Insert Table of Contents
-function! s:InsertToc(format, ...)
+function! s:InsertToc(format, ...) abort
   if a:0 > 0
     if type(a:1) != type(0)
       echohl WarningMsg
