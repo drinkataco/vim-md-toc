@@ -87,21 +87,38 @@ function! s:GetHeaderList() abort
         endif
       endif
     endif
+
     " match line against header regex
     if join(getline(i, i + 1), "\n") =~# s:headersRegexp && l:line =~# '^\S'
       let l:is_header = 1
     else
       let l:is_header = 0
     endif
+
     if l:is_header ==# 1 && l:fenced_block ==# 0 && l:front_matter ==# 0
-      " remove hashes from atx headers
+      " sanitise text
       if match(l:line, '^#') > -1
         let l:line = substitute(l:line, '\v^#*[ ]*', '', '')
         let l:line = substitute(l:line, '\v[ ]*#*$', '', '')
       endif
+
+      let l:line = substitute(l:line, '`', '', 'g')
+
+      " sanitise link
+      let l:link = substitute(tolower(l:line), '\v[ ]+', '-', 'g')
+      let l:link = substitute(l:link, "\\%#=0[^[:alnum:]\u00C0-\u00FF\u0400-\u04ff\u4e00-\u9fbf\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF _-]", '', 'g')
+
       " append line to list
       let l:level = s:GetHeaderLevel(i)
-      let l:item = {'level': l:level, 'text': l:line, 'lnum': i, 'bufnr': bufnr}
+
+      " add link object
+      let l:item = {
+            \ 'level': l:level,
+            \ 'text': l:line,
+            \ 'link': l:link,
+            \ 'lnum': i,
+            \ 'bufnr': bufnr
+            \}
       let l:header_list = l:header_list + [l:item]
     endif
   endfor
@@ -189,7 +206,7 @@ function! s:InsertToc(format, ...) abort
       let l:marker = '* '
     endif
     let l:text = '[' . header.text . ']'
-    let l:link = '(#' . substitute(tolower(header.text), '\v[ ]+', '-', 'g') . ')'
+    let l:link = '(#' . header.link . ')'
     let l:line = l:indent . l:marker . l:text . l:link
     let l:toc = l:toc + [l:line]
   endfor
