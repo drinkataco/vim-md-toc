@@ -2,8 +2,6 @@
 
 [![Vint](https://github.com/drinkataco/vim-md-toc/workflows/Vint/badge.svg)](https://github.com/drinkataco/vim-md-toc/actions?workflow=Vint)
 
-⚠️  NOTE: This is developing and is not stable
-
 Generate table of contents in your markdown files.
 
 This plugin wouldn't be possible without [perservim/vim-markdown](https://github.com/preservim/vim-markdown) - and was created to distribute basic functionality of that plugin to generate table of contents, and building on that functionality
@@ -36,7 +34,7 @@ Generate Table of Contents, Numbered
 ## TODO
 
 - Support levels
-- Fix backtick, bracket TOC linking
-- Support g:toc_md_smart, g:toc_md_skip_level_1
-- Add vader 
+- Add fences (support /* and \<!--)
+- Add :TocUpdate and auto update
+- Add vader
 - Add vimdoc
