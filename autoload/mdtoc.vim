@@ -143,23 +143,20 @@ endfunction
 
 ""
 " Insert Table of Contents
-function! s:InsertToc(format, ...) abort
-  if a:0 > 0
-    if type(a:1) != type(0)
-      echohl WarningMsg
-      echomsg '[vim-markdown] Invalid argument, must be an integer >= 2.'
-      echohl None
-      return
-    endif
-    let l:max_level = a:1
-    if l:max_level < 2
-      echohl WarningMsg
-      echomsg '[vim-markdown] Maximum level cannot be smaller than 2.'
-      echohl None
-      return
-    endif
+function! s:InsertToc(format, max_level) abort
+  let l:max_level = a:max_level
+
+  if empty(a:max_level)
+    let l:max_level = g:mdtoc_max_level
   else
-    let l:max_level = 0
+    let l:max_level = a:max_level
+  endif
+
+  if l:max_level !~# '^\d\+$'
+    echohl WarningMsg
+    echomsg '[vim-md-toc] Invalid argument, max_level must be an integer.'
+    echohl None
+    return
   endif
 
   let l:toc = []
@@ -214,10 +211,10 @@ function! s:InsertToc(format, ...) abort
   call append(line('.'), l:toc)
 endfunction
 
-function! mdtoc#Toc() abort
-  call s:InsertToc('bullets')
+function! mdtoc#Toc(...) abort
+  call s:InsertToc('bullets', a:1)
 endfunction
 
-function! mdtoc#TocNumbered() abort
-  call s:InsertToc('numers')
+function! mdtoc#TocNumbered(...) abort
+  call s:InsertToc('numbers', a:1)
 endfunction
