@@ -208,7 +208,57 @@ function! s:InsertToc(format, max_level) abort
     let l:toc = l:toc + [l:line]
   endfor
 
+  " Add fences
+  if index(['xml', 'html'], g:mdtoc_fence_style) >= 0
+    let l:end_fence = '<!-- vim-md-toc END -->'
+    let l:start_fence = '<!-- vim-md-toc -->'
+  elseif g:mdtoc_fence_style ==# 'js'
+    let l:end_fence = '/* vim-md-toc END */'
+    let l:start_fence = '/* vim-md-toc */'
+  endif
+
+  if g:mdtoc_fences == 1
+    call append(line('.'), l:end_fence)
+  endif
+
   call append(line('.'), l:toc)
+
+  if g:mdtoc_fences == 1
+    call append(line('.'), l:start_fence)
+  endif
+endfunction
+
+""
+" Delete Fenced Table of Contents
+"
+function! s:DeleteToc() abort
+  let l:winview = winsaveview()
+
+  keepjumps normal! gg0
+
+  if index(['xml', 'html'], g:mdtoc_fence_style) >= 0
+    let l:fence_pattern_start = '<!-- vim-md-toc END -->'
+    let l:fence_pattern_end = '<!-- vim-md-toc -->'
+  elseif g:mdtoc_fence_style ==# 'js'
+    let l:fence_pattern_start = '/* vim-md-toc END */'
+    let l:fence_pattern_end = '/* vim-md-toc */'
+  endif
+
+  let l:begin_line = -1
+  let l:end_line = -1
+
+  " Search for vim-md-toc pattern
+  if search(l:fence_pattern_start, 'Wc') != 0
+    let l:begin_line = line('.')
+
+    if search(l:fence_pattern_end, 'W') != 0
+      let l:end_line = line('.')
+
+      silent execute l:begin_line . ',' . l:end_line . 'delete_'
+    endif
+  endif
+
+  call winrestview(l:winview)
 endfunction
 
 function! mdtoc#Toc(...) abort
@@ -217,4 +267,8 @@ endfunction
 
 function! mdtoc#TocNumbered(...) abort
   call s:InsertToc('numbers', a:1)
+endfunction
+
+function! mdtoc#TocDelete() abort
+  call s:DeleteToc()
 endfunction
