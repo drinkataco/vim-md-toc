@@ -237,11 +237,11 @@ function! s:DeleteToc() abort
   keepjumps normal! gg0
 
   if index(['xml', 'html'], g:mdtoc_fence_style) >= 0
-    let l:fence_pattern_start = '<!-- vim-md-toc END -->'
-    let l:fence_pattern_end = '<!-- vim-md-toc -->'
+    let l:fence_pattern_start = '<!-- vim-md-toc -->'
+    let l:fence_pattern_end = '<!-- vim-md-toc END -->'
   elseif g:mdtoc_fence_style ==# 'js'
-    let l:fence_pattern_start = '/* vim-md-toc END */'
-    let l:fence_pattern_end = '/* vim-md-toc */'
+    let l:fence_pattern_start = '/* vim-md-toc */'
+    let l:fence_pattern_end = '/* vim-md-toc END */'
   endif
 
   let l:begin_line = -1
@@ -259,6 +259,12 @@ function! s:DeleteToc() abort
   endif
 
   call winrestview(l:winview)
+
+  if l:end_line == -1
+    echohl WarningMsg
+    echomsg '[vim-md-toc] No fenced table of contents found'
+    echohl None
+  endif
 endfunction
 
 function! mdtoc#Toc(...) abort
