@@ -265,6 +265,8 @@ function! s:DeleteToc() abort
     echomsg '[vim-md-toc] No fenced table of contents found'
     echohl None
   endif
+
+  return l:begin_line
 endfunction
 
 function! mdtoc#Toc(...) abort
@@ -277,4 +279,13 @@ endfunction
 
 function! mdtoc#TocDelete() abort
   call s:DeleteToc()
+endfunction
+
+function! mdtoc#TocUpdate() abort
+  let l:line_number = s:DeleteToc()
+  let l:winview = winsaveview()
+
+  call cursor(l:line_number - 1, 1)
+  call s:InsertToc('bullets', '')
+  call winrestview(l:winview)
 endfunction
