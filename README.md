@@ -25,6 +25,8 @@ Plug 'drinkataco/vim-md-toc'
 
 ## Usage
 
+![Demo](./screenshots/demo.gif)
+
 ### Commands
 
 * `:Toc`
