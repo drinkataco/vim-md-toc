@@ -4,13 +4,12 @@
 
 Generate table of contents in your markdown files.
 
-This plugin wouldn't be possible without [perservim/vim-markdown](https://github.com/preservim/vim-markdown) - and was created to distribute basic functionality of that plugin to generate table of contents, and building on that functionality
-
 <!-- vim-md-toc format=bullets ignore=^TODO$ -->
 * [Installation](#installation)
 * [Usage](#usage)
   * [Commands](#commands)
   * [Configuration](#configuration)
+* [Credits](#credits)
 <!-- vim-md-toc END -->
 
 ## Installation
@@ -85,6 +84,10 @@ Plug 'drinkataco/vim-md-toc'
    Default: `0` (unlimited)
 
    Set the default max child level of the table of contents.
+
+## Credits
+
+This plugin was developed out of [perservim/vim-markdown](https://github.com/preservim/vim-markdown) - based off of the Table of Contents functionality, and includes a bunch of new features and bug fixes.
 
 ## TODO
 
