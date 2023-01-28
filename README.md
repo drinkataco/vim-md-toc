@@ -71,6 +71,12 @@ Plug 'drinkataco/vim-md-toc'
 
    By default, as expected by most markdown parsers, fences are added in the style of xml/html comments; `<!-- vim-md-toc -->`. Setting this value to `js` allows the fences to be represented like `/* vim-md-toc */`.
 
+* `g:mdtoc_ignore_regex`
+
+  No Default
+
+  Add common regex patterns for headers (and their children) to be ignored. For example, `^Contents$`
+
 * `g:mdtoc_max_level`
 
    Default: `0` (unlimited)

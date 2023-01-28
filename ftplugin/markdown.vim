@@ -11,8 +11,8 @@ let g:loaded_mdtoc = 1
 let g:mdtoc_autoupdate = get(g:, 'mdtoc_autoupdate', 0)
 let g:mdtoc_fences = get(g:, 'mdtoc_fences', 1)
 let g:mdtoc_fence_style = get(g:, 'mdtoc_fence_style', 'xml')
+let g:mdtoc_ignore_regex = get(g:, 'mdtoc_ignore_regex', -1)
 let g:mdtoc_max_level = get(g:, 'mdtoc_max_level', 0)
-let g:mdtoc_ignore_regex = get(g:, 'mdtoc_ignore_regex', 'TODO')
 
 " Exposes the plugin's functions for use as commands in Vim.
 command! -nargs=* Toc call mdtoc#Toc('bullets', <f-args>)
