@@ -295,18 +295,10 @@ function! s:DeleteToc() abort
   return l:begin_line
 endfunction
 
-function! mdtoc#Toc(...) abort
+function! mdtoc#Toc(type, ...) abort
   echo a:000
   call s:InsertToc(
-        \ 'bullets',
-        \ get(a:, 1, ''),
-        \ get(a:, 2, '')
-        \ )
-endfunction
-
-function! mdtoc#TocNumbered(...) abort
-  call s:InsertToc(
-        \ 'numbers',
+        \ a:type,
         \ get(a:, 1, ''),
         \ get(a:, 2, '')
         \ )

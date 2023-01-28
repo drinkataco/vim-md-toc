@@ -15,8 +15,8 @@ let g:mdtoc_max_level = get(g:, 'mdtoc_max_level', 0)
 let g:mdtoc_ignore_regex = get(g:, 'mdtoc_ignore_regex', 'TODO')
 
 " Exposes the plugin's functions for use as commands in Vim.
-command! -nargs=* Toc call mdtoc#Toc(<f-args>)
-command! -nargs=* TocNumbered call mdtoc#TocNumbered(<f-args>)
+command! -nargs=* Toc call mdtoc#Toc('bullets', <f-args>)
+command! -nargs=* TocNumbered call mdtoc#Toc('numbered', <f-args>)
 command! -nargs=0 TocDelete call mdtoc#TocDelete()
 command! -nargs=0 TocUpdate call mdtoc#TocUpdate()
 
