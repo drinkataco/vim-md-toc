@@ -88,6 +88,8 @@ Plug 'drinkataco/vim-md-toc'
 
 ## TODO
 
-- Add vimdoc
-- Add contexts to nearest header, max_level context, and multi toc support
-- Add vader
+* Add vader
+* Add command context
+  * Add to nearest header
+  * use max_level in inserted context
+  * support multiple table of contents for update, delete
