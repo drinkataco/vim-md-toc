@@ -58,12 +58,15 @@ endfunction
 
 ""
 " Return list of headers and their levels.
-function! s:GetHeaderList() abort
+function! s:GetHeaderList(...) abort
   let l:bufnr = bufnr('%')
   let l:fenced_block = 0
   let l:front_matter = 0
   let l:header_list = []
   let l:vim_markdown_frontmatter = get(g:, 'vim_markdown_frontmatter', 0)
+  let l:skip_level = -1
+  let l:ignore_regex = a:1
+
   for i in range(1, line('$'))
     let l:lineraw = getline(i)
     let l:l1 = getline(i+1)
@@ -111,6 +114,18 @@ function! s:GetHeaderList() abort
       " append line to list
       let l:level = s:GetHeaderLevel(i)
 
+      " Based on a REGEX pattern, we can skip headers and their children
+      if ignore_regex != -1
+        if l:skip_level != -1 && l:skip_level < l:level
+          continue
+        elseif l:line =~# l:ignore_regex
+          let l:skip_level = l:level
+          continue
+        else
+          let l:skip_level = -1
+        endif
+      endif
+
       " add link object
       let l:item = {
             \ 'level': l:level,
@@ -122,6 +137,7 @@ function! s:GetHeaderList() abort
       let l:header_list = l:header_list + [l:item]
     endif
   endfor
+
   return l:header_list
 endfunction
 
@@ -143,13 +159,19 @@ endfunction
 
 ""
 " Insert Table of Contents
-function! s:InsertToc(format, max_level) abort
-  let l:max_level = a:max_level
-
-  if empty(a:max_level)
+function! s:InsertToc(format, ...) abort
+  " Get Max Level
+  if empty(a:1)
     let l:max_level = g:mdtoc_max_level
   else
-    let l:max_level = a:max_level
+    let l:max_level = a:1
+  endif
+
+  " Get Ignore Regex Pattern
+  if empty(a:2)
+    let l:ignore_regex = g:mdtoc_ignore_regex
+  else
+    let l:ignore_regex = a:2
   endif
 
   if l:max_level !~# '^\d\+$'
@@ -160,7 +182,8 @@ function! s:InsertToc(format, max_level) abort
   endif
 
   let l:toc = []
-  let l:header_list = s:GetHeaderList()
+  let l:header_list = s:GetHeaderList(l:ignore_regex)
+
   if len(l:header_list) == 0
     echom 'InsertToc: No headers.'
     return
@@ -179,8 +202,10 @@ function! s:InsertToc(format, max_level) abort
   endif
 
   let l:h2_count = 0
+
   for header in l:header_list
     let l:level = header.level
+
     if l:level == 1
       " skip level-1 headers
       continue
@@ -202,6 +227,7 @@ function! s:InsertToc(format, max_level) abort
       let l:indent = repeat(' ', l:max_h2_number_len + 2 * (l:level - 2))
       let l:marker = '* '
     endif
+
     let l:text = '[' . header.text . ']'
     let l:link = '(#' . header.link . ')'
     let l:line = l:indent . l:marker . l:text . l:link
@@ -270,11 +296,20 @@ function! s:DeleteToc() abort
 endfunction
 
 function! mdtoc#Toc(...) abort
-  call s:InsertToc('bullets', a:1)
+  echo a:000
+  call s:InsertToc(
+        \ 'bullets',
+        \ get(a:, 1, ''),
+        \ get(a:, 2, '')
+        \ )
 endfunction
 
 function! mdtoc#TocNumbered(...) abort
-  call s:InsertToc('numbers', a:1)
+  call s:InsertToc(
+        \ 'numbers',
+        \ get(a:, 1, ''),
+        \ get(a:, 2, '')
+        \ )
 endfunction
 
 function! mdtoc#TocDelete() abort
@@ -286,6 +321,6 @@ function! mdtoc#TocUpdate() abort
   let l:winview = winsaveview()
 
   call cursor(l:line_number - 1, 1)
-  call s:InsertToc('bullets', '')
+  call s:InsertToc('bullets', '', '')
   call winrestview(l:winview)
 endfunction

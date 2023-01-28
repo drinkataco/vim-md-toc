@@ -8,12 +8,9 @@ This plugin wouldn't be possible without [perservim/vim-markdown](https://github
 
 <!-- vim-md-toc -->
 * [Installation](#installation)
-* [Commands](#commands)
-  * [:Toc](#toc)
-  * [:TocNumbered](#tocnumbered)
-  * [:TocDelete](#tocdelete)
-* [Settings](#settings)
-* [TODO](#todo)
+* [Usage](#usage)
+  * [Commands](#commands)
+  * [Settings](#settings)
 <!-- vim-md-toc END -->
 
 ## Installation
@@ -25,25 +22,38 @@ With [vim-plug](https://github.com/junegunn/vim-plug)
 Plug 'drinkataco/vim-md-toc'
 ```
 
-## Commands
+## Usage
 
-### `:Toc`
+### Commands
 
-Generate Table of Contents
+* `:Toc`
+
+   Generate Table of Contents
+
+   **Arguments**
+
+   `:Toc 5 ^Contents$`.
+
+   1. The first argument is used to indicate the maximum depth of the contents children. By default, the value `g:mdtoc_max_level` is used.
+   2. The second argument is used to denote patterns of headers to ignore, and their children will also be ignored. A default pattern can be set with `g:mdtoc_ignore_regex`.
 
 Takes an argument, like `:Toc 4` to indicate the maximum level the contents can go. Otherwise, uses the `g:mdtoc_max_level` value (which is set to unlimited).
 
-### `:TocNumbered`
+* `:TocNumbered`
 
-Generate Table of Contents, Numbered
+   Generate Table of Contents, Numbered
 
-Takes an argument, like `:TocNumbered 4` to indicate the maximum level the contents can go. Otherwise, uses the `g:mdtoc_max_level` value (which is set to unlimited).
+   See [:Toc](#toc) for list of argyments
 
-### `:TocDelete`
+* `:TocDelete`
 
-Delete Table of contents, if that table of context is fenced (see [g:mdtoc_fences](#gmdtock_fences))
+   Delete Table of Contents, if contents are fenced (see [g:mdtoc_fences](#gmdtock_fences))
 
-## Settings
+* `:TocUpdate`
+
+   Update Table of Contents, if contents are fenced (see [g:mdtoc_fences](#gmdtock_fences))
+
+### Settings
 
 * `g:mdtoc_autoupdate`
 
@@ -71,9 +81,7 @@ Delete Table of contents, if that table of context is fenced (see [g:mdtoc_fence
 
 ## TODO
 
-- Add :TocUpdate and auto update
-- Add regex ignore
-- add ignore/max level to fences
+- add type/ignore/max level to fences
 - Support levels
 - Add vader
 - Add vimdoc
