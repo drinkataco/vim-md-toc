@@ -32,12 +32,10 @@ Plug 'drinkataco/vim-md-toc'
 
    **Arguments**
 
-   `:Toc 5 ^Contents$`.
+   `:Toc 5 ^Contents$`
 
-   1. The first argument is used to indicate the maximum depth of the contents children. By default, the value `g:mdtoc_max_level` is used.
-   2. The second argument is used to denote patterns of headers to ignore, and their children will also be ignored. A default pattern can be set with `g:mdtoc_ignore_regex`.
-
-Takes an argument, like `:Toc 4` to indicate the maximum level the contents can go. Otherwise, uses the `g:mdtoc_max_level` value (which is set to unlimited).
+   * The first argument is used to indicate the maximum depth of the contents children. By default, the value `g:mdtoc_max_level` is used.
+   * The second argument is used to denote patterns of headers to ignore, and their children will also be ignored. A default pattern can be set with `g:mdtoc_ignore_regex`.
 
 * `:TocNumbered`
 
