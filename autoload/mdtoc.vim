@@ -160,6 +160,8 @@ endfunction
 ""
 " Insert Table of Contents
 function! s:InsertToc(format, ...) abort
+  let l:format = a:format
+
   " Get Max Level
   if empty(a:1)
     let l:max_level = g:mdtoc_max_level
@@ -174,9 +176,9 @@ function! s:InsertToc(format, ...) abort
     let l:ignore_regex = a:2
   endif
 
-  if l:max_level !~# '^\d\+$'
+  if (l:max_level !~# '^\d\+$' || l:max_level < 2) && l:max_level != -1
     echohl WarningMsg
-    echomsg '[vim-md-toc] Invalid argument, max_level must be an integer.'
+    echomsg '[vim-md-toc] Invalid argument, max_level must be an integer more than 1'
     echohl None
     return
   endif
@@ -189,7 +191,7 @@ function! s:InsertToc(format, ...) abort
     return
   endif
 
-  if a:format ==# 'numbers'
+  if l:format ==# 'numbers'
     let l:h2_count = 0
     for header in l:header_list
       if header.level == 2
@@ -209,12 +211,12 @@ function! s:InsertToc(format, ...) abort
     if l:level == 1
       " skip level-1 headers
       continue
-    elseif l:max_level != 0 && l:level > l:max_level
+    elseif l:max_level != -1 && l:level > l:max_level
       " skip unwanted levels
       continue
     elseif l:level == 2
       " list of level-2 headers can be bullets or numbers
-      if a:format ==# 'bullets'
+      if l:format ==# 'bullets'
         let l:indent = ''
         let l:marker = '* '
       else
@@ -235,12 +237,26 @@ function! s:InsertToc(format, ...) abort
   endfor
 
   " Add fences
-  if index(['xml', 'html'], g:mdtoc_fence_style) >= 0
-    let l:end_fence = '<!-- vim-md-toc END -->'
-    let l:start_fence = '<!-- vim-md-toc -->'
-  elseif g:mdtoc_fence_style ==# 'js'
-    let l:end_fence = '/* vim-md-toc END */'
-    let l:start_fence = '/* vim-md-toc */'
+  if g:mdtoc_fences == 1
+    let l:fence_settings = 'format=' . l:format
+
+    if l:max_level != -1
+      let l:fence_settings =
+            \ l:fence_settings . ' max_level=' . l:max_level
+    endif
+
+    if l:ignore_regex != -1
+      let l:fence_settings =
+            \ l:fence_settings . ' ignore=' . l:ignore_regex
+    endif
+
+    if index(['xml', 'html'], g:mdtoc_fence_style) >= 0
+      let l:end_fence = '<!-- vim-md-toc END -->'
+      let l:start_fence = '<!-- vim-md-toc ' . l:fence_settings . ' -->'
+    elseif g:mdtoc_fence_style ==# 'js'
+      let l:end_fence = '/* vim-md-toc END */'
+      let l:start_fence = '/* vim-md-toc */'
+    endif
   endif
 
   if g:mdtoc_fences == 1
@@ -263,20 +279,38 @@ function! s:DeleteToc() abort
   keepjumps normal! gg0
 
   if index(['xml', 'html'], g:mdtoc_fence_style) >= 0
-    let l:fence_pattern_start = '<!-- vim-md-toc -->'
+    let l:fence_pattern_start = '<!-- vim-md-toc'
     let l:fence_pattern_end = '<!-- vim-md-toc END -->'
   elseif g:mdtoc_fence_style ==# 'js'
-    let l:fence_pattern_start = '/* vim-md-toc */'
+    let l:fence_pattern_start = '/* vim-md-toc'
     let l:fence_pattern_end = '/* vim-md-toc END */'
   endif
 
   let l:begin_line = -1
   let l:end_line = -1
+  let l:list_format = g:mdtoc_default_list_format
+  let l:list_ignore = g:mdtoc_ignore_regex
+  let l:list_max_level = g:mdtoc_max_level
 
   " Search for vim-md-toc pattern
   if search(l:fence_pattern_start, 'Wc') != 0
     let l:begin_line = line('.')
 
+    " Extract fence settings
+    let l:fence_settings = split(getline('.'))
+    let l:fence_settings = l:fence_settings[1 : len(l:fence_settings) - 2]
+
+    for option in l:fence_settings
+      if option =~# '^format='
+        let l:list_format = split(option, '=')[1]
+      elseif option =~# '^ignore='
+        let l:list_ignore = split(option, '=')[1]
+      elseif option =~# '^max_level='
+        let l:list_max_level = split(option, '=')[1]
+      endif
+    endfor
+
+    " Search for end of pattern
     if search(l:fence_pattern_end, 'W') != 0
       let l:end_line = line('.')
 
@@ -292,13 +326,17 @@ function! s:DeleteToc() abort
     echohl None
   endif
 
-  return l:begin_line
+  return [
+        \ l:begin_line,
+        \ l:list_format,
+        \ l:list_ignore,
+        \ l:list_max_level
+        \ ]
 endfunction
 
-function! mdtoc#Toc(type, ...) abort
-  echo a:000
+function! mdtoc#Toc(format, ...) abort
   call s:InsertToc(
-        \ a:type,
+        \ a:format,
         \ get(a:, 1, ''),
         \ get(a:, 2, '')
         \ )
@@ -309,10 +347,14 @@ function! mdtoc#TocDelete() abort
 endfunction
 
 function! mdtoc#TocUpdate() abort
-  let l:line_number = s:DeleteToc()
+  let [l:line_number, l:list_format, l:list_ignore, l:list_max_level] = s:DeleteToc()
   let l:winview = winsaveview()
 
   call cursor(l:line_number - 1, 1)
-  call s:InsertToc('bullets', '', '')
+  call s:InsertToc(
+        \ l:list_format,
+        \ l:list_max_level,
+        \ l:list_ignore
+        \ )
   call winrestview(l:winview)
 endfunction
