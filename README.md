@@ -42,15 +42,15 @@ Plug 'drinkataco/vim-md-toc'
 
    Generate Table of Contents, Numbered
 
-   See [:Toc](#toc) for list of argyments
+   See `:Toc` for list of arguments
 
 * `:TocDelete`
 
-   Delete Table of Contents, if contents are fenced (see [g:mdtoc_fences](#gmdtock_fences))
+   Delete Table of Contents, if contents are fenced (see `g:mdtoc_fences`)
 
 * `:TocUpdate`
 
-   Update Table of Contents, if contents are fenced (see [g:mdtoc_fences](#gmdtock_fences))
+   Update Table of Contents, if contents are fenced (see `g:mdtoc_fences`). Can be automated on all markdown files by setting `g:mdtoc_autoupdate` to `1`.
 
 ### Settings
 
