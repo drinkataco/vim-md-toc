@@ -16,7 +16,7 @@ let s:levelRegexpDict = {
 " Matches any header level of any type.
 let s:headersRegexp = '\v^(#|.+\n(\=+|-+)$)'
 
-""
+"
 " Returns the line number of the first header before `line`, called the
 " current header.
 "
@@ -38,10 +38,11 @@ function! s:GetHeaderLineNum(...) abort
   return 0
 endfunction
 
-""
+"
 " - if line is inside a header, return the header level (h1 -> 1, h2 -> 2, etc.).
 "
 " - if line is at top level outside any headers, return `0`.
+"
 function! s:GetHeaderLevel(...) abort
   if a:0 == 0
     let l:line = line('.')
@@ -56,8 +57,9 @@ function! s:GetHeaderLevel(...) abort
   endif
 endfunction
 
-""
+"
 " Return list of headers and their levels.
+"
 function! s:GetHeaderList(...) abort
   let l:bufnr = bufnr('%')
   let l:fenced_block = 0
@@ -141,7 +143,7 @@ function! s:GetHeaderList(...) abort
   return l:header_list
 endfunction
 
-""
+"
 " Returns the level of the header at the given line.
 "
 " If there is no header at the given line, returns `0`.
@@ -157,8 +159,9 @@ function! s:GetLevelOfHeaderAtLine(linenum) abort
   return 0
 endfunction
 
-""
+"
 " Insert Table of Contents
+"
 function! s:InsertToc(format, ...) abort
   let l:format = a:format
 
@@ -270,7 +273,7 @@ function! s:InsertToc(format, ...) abort
   endif
 endfunction
 
-""
+"
 " Delete Fenced Table of Contents
 "
 function! s:DeleteToc() abort

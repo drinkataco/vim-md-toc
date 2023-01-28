@@ -10,7 +10,7 @@ This plugin wouldn't be possible without [perservim/vim-markdown](https://github
 * [Installation](#installation)
 * [Usage](#usage)
   * [Commands](#commands)
-  * [Settings](#settings)
+  * [Configuration](#configuration)
 <!-- vim-md-toc END -->
 
 ## Installation
@@ -52,7 +52,7 @@ Plug 'drinkataco/vim-md-toc'
 
    Update Table of Contents, if contents are fenced (see `g:mdtoc_fences`). Can be automated on all markdown files by setting `g:mdtoc_autoupdate` to `1`.
 
-### Settings
+### Configuration
 
 * `g:mdtoc_autoupdate`
 

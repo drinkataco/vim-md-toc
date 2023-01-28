@@ -1,0 +1,92 @@
+*md-toc.txt*
+                                                                      *md-toc*
+
+==============================================================================
+CONTENTS                                                     *md-toc-contents*
+  1. Introduction...............................................|md-toc-intro|
+  2. Configuration.............................................|md-toc-config|
+  3. Commands................................................|md-toc-commands|
+
+==============================================================================
+INTRODUCTION                                                    *md-toc-intro*
+
+This plugin allows you to generate a table of contents for your markdown
+files, based off of the headers. With configuration, you can set max children
+leveling, style (numbered or bullet), and ignore patterns. The table of
+contents can be set to auto update on file save with the |g:mdtoc_autoupdate|
+config
+
+==============================================================================
+CONFIGURATION                                                  *md-toc-config*
+
+                                                          *g:mdtoc_autoupdate*
+Set markdown files to auto update any table of contents generated with the
+plugin. Requires fences to be enabled with |g:mdtoc_fences| - as is by default
+
+Default: 0
+
+                                                              *g:mdtoc_fences*
+Fences are comments surrounding the generated table of contents. Keeping this
+enabled allows the |:TocUpdate| and the |:TocDelete| commands to work.
+
+Default: 1
+
+                                                         *g:mdtoc_fence_style*
+Fences can be styles as XML comments (default) and JS comments. The former
+being the default for most parsers.
+
+Default: xml
+
+                                                        *g:mdtoc_ignore_regex*
+Patterns can be set to be ignored by default, as a regular expression. For
+example; '^Contents$'.
+
+By default, no pattern is enabled.
+
+                                                           *g:mdtoc_max_level*
+Max level of headers to add to the table of contents, with 1 being the top
+level header (which itself is ignored from the table of contents).
+
+By default, no max level is set.
+
+==============================================================================
+COMMANDS                                                     *md-toc-commands*
+
+:Toc                                                                    *:Toc*
+  Generates a bulleted Table of Contents based off the current markdown files
+  headers. Uses the default or global values set for options.
+
+:Toc [max_level]
+  Generates a Table of Contents based off the current markdown files headers.
+  You can pass through a maximum depth value through here too. See
+  |g:mdtoc_max_level|.
+
+:Toc [max_level] [ignore_pattern]
+  Generates a Table of Contents based off the current markdown files headers.
+  You can pass through an ignore pattern through here after the max_level. See
+  |g:mdtoc_ignore_regex|.
+
+:TocNumbered                                                    *:TocNumbered*
+  Generates a numbered Table of Contents based off the current markdown files
+  headers. Uses the default or global values set for options.
+
+:TocNumbered [max_level]
+  Generates a numbered Table of Contents based off the current markdown files
+  headers. You can pass through a maximum depth value through here too. See
+  |g:mdtoc_max_level|.
+
+:TocNumbered [max_level] [ignore_pattern]
+  Generates a numbered Table of Contents based off the current markdown files
+  headers. You can pass through an ignore pattern through here after the
+  max_level. See |g:mdtoc_ignore_regex|.
+
+:TocDelete                                                        *:TocDelete*
+  Delete the generated Table of Contents. |g:mdtoc_fences| must be enabled so
+  they can be found.
+
+:TocUpdate                                                        *:TocUpdate*
+  Update the Table of Contents previously generated. |g:mdtoc_fences| must be
+  enabled so they can be found.
+
+
+vim:tw=78:ts=8:ft=help:norl:
