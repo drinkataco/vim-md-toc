@@ -282,11 +282,11 @@ function! s:DeleteToc() abort
   keepjumps normal! gg0
 
   if index(['xml', 'html'], g:mdtoc_fence_style) >= 0
-    let l:fence_pattern_start = '<!-- vim-md-toc'
-    let l:fence_pattern_end = '<!-- vim-md-toc END -->'
+    let l:fence_pattern_start = '^<!-- vim-md-toc'
+    let l:fence_pattern_end = '^<!-- vim-md-toc END -->'
   elseif g:mdtoc_fence_style ==# 'js'
-    let l:fence_pattern_start = '/* vim-md-toc'
-    let l:fence_pattern_end = '/* vim-md-toc END */'
+    let l:fence_pattern_start = '^/* vim-md-toc'
+    let l:fence_pattern_end = '^/* vim-md-toc END */'
   endif
 
   let l:begin_line = -1
@@ -352,6 +352,10 @@ endfunction
 function! mdtoc#TocUpdate() abort
   let [l:line_number, l:list_format, l:list_ignore, l:list_max_level] = s:DeleteToc()
   let l:winview = winsaveview()
+
+  if l:line_number == -1
+    return
+  endif
 
   call cursor(l:line_number - 1, 1)
   call s:InsertToc(
