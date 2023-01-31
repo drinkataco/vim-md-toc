@@ -1,6 +1,7 @@
 # Vim Markdown TOC Generator
 
 [![Vint](https://github.com/drinkataco/vim-md-toc/workflows/Vint/badge.svg)](https://github.com/drinkataco/vim-md-toc/actions?workflow=Vint)
+[![Vader](https://github.com/drinkataco/vim-md-toc/workflows/Vader/badge.svg)](https://github.com/drinkataco/vim-md-toc/actions?workflow=Vader)
 
 Generate table of contents in your markdown files.
 
@@ -91,7 +92,6 @@ This plugin was developed out of [perservim/vim-markdown](https://github.com/pre
 
 ## TODO
 
-* Add vader
 * Add command context
   * Add to nearest header
   * use max_level in inserted context

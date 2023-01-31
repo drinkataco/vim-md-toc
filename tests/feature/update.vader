@@ -1,0 +1,83 @@
+#################
+# Inserting table of contents into a markdown file
+#################
+
+Given (fixture):
+================
+  # Main
+
+  ## Contents
+
+  <!-- vim-md-toc format=bullets -->
+  * [Contents](#contents)
+  * [Child 1](#child-1)
+  * [Child 2](#child-2)
+    * [Grandchild](#grandchild)
+    * [A coded grandchild](#a-coded-grandchild)
+  * [Child 3](#child-3)
+  <!-- vim-md-toc END -->
+
+  ## Child 1
+
+  ## Child 2
+
+  ### Grandchild
+
+  ### `A coded grandchild`
+
+  ## Child 3
+
+Execute (add table of contents with arguments):
+-----------------
+  %s/### Grandchild/### Someone/g
+  set filetype=markdown
+  TocUpdate
+
+Expect (result):
+~~~~~~~~~~~~~~~~
+  # Main
+
+  ## Contents
+
+  <!-- vim-md-toc format=bullets -->
+  * [Contents](#contents)
+  * [Child 1](#child-1)
+  * [Child 2](#child-2)
+    * [Someone](#someone)
+    * [A coded grandchild](#a-coded-grandchild)
+  * [Child 3](#child-3)
+  <!-- vim-md-toc END -->
+
+  ## Child 1
+
+  ## Child 2
+
+  ### Someone
+
+  ### `A coded grandchild`
+
+  ## Child 3
+~~~~~~~~~~~~~~~~
+
+Execute (delete table of contents):
+-----------------
+  set filetype=markdown
+  TocDelete
+
+Expect (result):
+~~~~~~~~~~~~~~~~
+  # Main
+
+  ## Contents
+
+
+  ## Child 1
+
+  ## Child 2
+
+  ### Grandchild
+
+  ### `A coded grandchild`
+
+  ## Child 3
+~~~~~~~~~~~~~~~~
