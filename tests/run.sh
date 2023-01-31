@@ -9,8 +9,7 @@ eval "${VIM_CMD}" "${VIM_FLAGS}" -u <(cat << VIMRC
   filetype off
   set rtp+=${VIM_PLUGINS}/vader.vim
   set rtp+=.
-  set rtp+=after
+  set rtp+=..
   filetype plugin indent on
-  syntax enable
 VIMRC
-) -c 'Vader! feature/*'
+) -c 'Vader! feature/update.vader'
