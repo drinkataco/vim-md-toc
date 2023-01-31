@@ -92,7 +92,6 @@ This plugin was developed out of [perservim/vim-markdown](https://github.com/pre
 
 ## TODO
 
-* Add vader
 * Add command context
   * Add to nearest header
   * use max_level in inserted context
