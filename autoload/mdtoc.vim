@@ -263,14 +263,12 @@ function! s:InsertToc(format, ...) abort
   endif
 
   if g:mdtoc_fences == 1
-    call append(line('.'), l:end_fence)
+    let l:toc = [l:start_fence] + l:toc + [l:end_fence]
   endif
 
   call append(line('.'), l:toc)
 
-  if g:mdtoc_fences == 1
-    call append(line('.'), l:start_fence)
-  endif
+  return l:toc
 endfunction
 
 "
@@ -331,6 +329,7 @@ function! s:DeleteToc() abort
 
   return [
         \ l:begin_line,
+        \ l:end_line,
         \ l:list_format,
         \ l:list_ignore,
         \ l:list_max_level
@@ -350,18 +349,41 @@ function! mdtoc#TocDelete() abort
 endfunction
 
 function! mdtoc#TocUpdate() abort
-  let [l:line_number, l:list_format, l:list_ignore, l:list_max_level] = s:DeleteToc()
+  " These variables help us determine cursor jump after update
+  let l:file_lines = line('$') " This allows us to calculate
+  let l:line_pos = line('.') " Initial line position
+  let l:col_pos = virtcol('.') " Initial column position
+
+  let [
+        \ l:begin_line,
+        \ l:end_line,
+        \ l:list_format,
+        \ l:list_ignore,
+        \ l:list_max_level
+      \ ] = s:DeleteToc()
+
   let l:winview = winsaveview()
 
-  if l:line_number == -1
+  " If no Toc exists, circuit break
+  if l:begin_line == -1
     return
   endif
 
-  call cursor(l:line_number - 1, 1)
+  " Go to position of Toc to reinsert
+  call cursor(l:begin_line - 1, 1)
   call s:InsertToc(
         \ l:list_format,
         \ l:list_max_level,
         \ l:list_ignore
         \ )
+
+  let l:updated_file_lines = line('$')
+
   call winrestview(l:winview)
+
+  " We want to account for new cursor position, if cursor after TOC definition
+  if l:line_pos > l:begin_line
+    let l:nl = (line('.') + (l:updated_file_lines - l:file_lines))
+    call cursor(l:nl, l:col_pos)
+  endif
 endfunction
