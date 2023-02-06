@@ -345,7 +345,19 @@ function! mdtoc#Toc(format, ...) abort
 endfunction
 
 function! mdtoc#TocDelete() abort
-  call s:DeleteToc()
+  " These variables help us determine cursor jump after update
+  let l:line_pos = line('.') " Initial line position
+  let l:col_pos = virtcol('.') " Initial column position
+
+  let l:winview = winsaveview()
+  let [l:begin_line, l:end_line, l:x, l:y, l:z] = s:DeleteToc()
+  call winrestview(l:winview)
+
+  " We want to account for new cursor position, if cursor after TOC definition
+  if l:line_pos > l:begin_line
+    let l:nl = (line('.') - (l:end_line - l:begin_line + 1))
+    call cursor(l:nl, l:col_pos)
+  endif
 endfunction
 
 function! mdtoc#TocUpdate() abort
