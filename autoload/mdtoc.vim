@@ -366,6 +366,8 @@ function! mdtoc#TocUpdate() abort
   let l:line_pos = line('.') " Initial line position
   let l:col_pos = virtcol('.') " Initial column position
 
+  let l:winview = winsaveview()
+
   let [
         \ l:begin_line,
         \ l:end_line,
@@ -373,8 +375,6 @@ function! mdtoc#TocUpdate() abort
         \ l:list_ignore,
         \ l:list_max_level
       \ ] = s:DeleteToc()
-
-  let l:winview = winsaveview()
 
   " If no Toc exists, circuit break
   if l:begin_line == -1
